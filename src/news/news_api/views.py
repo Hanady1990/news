@@ -1,6 +1,7 @@
 from rest_framework import viewsets, exceptions
 from django.shortcuts import render
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 from newsapi import NewsApiClient
 from collections import namedtuple
@@ -49,13 +50,11 @@ class NewsViewSet(viewsets.GenericViewSet):
 				json_article = {'headline': article['data']['title'], 'link': article['data']['url'], 'source': 'reddit'}
 				resp_obj.append(json_article)
 
-
-
 			return Response(resp_obj)
 
 
 		except Exception as ex:
-			template = "An exception of type {0} occurred. Arguments:\n{1!r} ---  line {2}"
+			template = "An exception of type {0} occurred. Arguments:\n{1!r}; line: {2}"
 			message = template.format(type(ex).__name__, ex.args, sys.exc_info()[-1].tb_lineno)
 			log_error(message, 'NewsViewSet/list')
 			raise exceptions.APIException(message)

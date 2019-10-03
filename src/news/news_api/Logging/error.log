@@ -2,3 +2,15 @@
 ('data',) ---  line 44 in NewsViewSet/list at: 2019-10-03 12:00:55.019248
 [2019-10-03 12:03:17] ERROR [error_logger.log_error:120] An exception of type KeyError occurred. Arguments:
 ('data',) ---  line 46 in NewsViewSet/list at: 2019-10-03 12:03:17.001018
+[2019-10-03 12:49:17] ERROR [error_logger.log_error:65] An exception of type KeyError occurred. Arguments:
+('data',) ---  line 44 in NewsViewSet/list at: 2019-10-03 12:49:17.892253
+[2019-10-03 14:21:15] ERROR [error_logger.log_error:66] An exception of type KeyError occurred. Arguments:
+('data',) ---  line 45 in NewsViewSet/list at: 2019-10-03 14:21:15.381912
+[2019-10-03 14:21:57] ERROR [error_logger.log_error:66] An exception of type KeyError occurred. Arguments:
+('data',) ---  line 45 in NewsViewSet/list at: 2019-10-03 14:21:57.175735
+[2019-10-03 14:22:24] ERROR [error_logger.log_error:66] An exception of type KeyError occurred. Arguments:
+('data',) ---  line 45 in NewsViewSet/list at: 2019-10-03 14:22:24.633686
+[2019-10-03 14:23:44] ERROR [error_logger.log_error:66] An exception of type KeyError occurred. Arguments:
+('data',) ---  line 45 in NewsViewSet/list at: 2019-10-03 14:23:44.260690
+[2019-10-03 14:23:47] ERROR [error_logger.log_error:66] An exception of type KeyError occurred. Arguments:
+('data',) ---  line 45 in NewsViewSet/list at: 2019-10-03 14:23:47.811140
