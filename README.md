@@ -25,6 +25,12 @@ These instructions will get you a copy of the project up and running on your loc
 ### Run server
 `python manage.py runserver`
 
+### List aggregated news
+Open your browser or Postman, paste the following URL: `http://127.0.0.1:8000/api/news/`
+
+### Search aggregated news
+Open your browser or Postman, paste the following URL: `http://127.0.0.1:8000/api/news/`
+
 # Running the tests
 ### Run the following command
 `Python manage.py test`
