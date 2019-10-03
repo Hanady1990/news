@@ -180,5 +180,6 @@ STATIC_URL = '/static/'
 
 NEWS_API_URL = 'https://newsapi.org/v2/everything'
 REDDIT_API_URL = 'https://www.reddit.com/r/news/.json'
+REDDIT_SEARCH_API_URL = 'https://www.reddit.com/r/news/search/.json'
 
 NEWS_API_KEY = '927089e2072c4710840ca6d3fa9b7e50'

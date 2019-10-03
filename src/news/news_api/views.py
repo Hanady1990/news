@@ -19,26 +19,40 @@ from news import settings
 class NewsViewSet(viewsets.GenericViewSet):
 
 	def list(self, request):
+		"""
+		An API that aggregates News API and Reddit data, and have the ability to search a keyword in the article.
+		The returned response is a json array.
+		Params:
+		query (optional): string - keyword for search
+		"""
 		try:
+			log_info("Listing all news.", "NewsViewSet/list")
+			query = request.GET.get('query')
+			log_info("Params: query={0}".format(query), "NewsViewSet/list")
 
 			# News API
-			today = datetime.today().date()
-			news_api_url = '{0}?q=bitcoin&from={1}&sortBy=publishedAt&apiKey={2}'.format(settings.NEWS_API_URL, today, settings.NEWS_API_KEY)
+			news_api_url = '{0}?apiKey={1}&q={2}'.format(settings.NEWS_API_URL, settings.NEWS_API_KEY, query)
 			response = requests.get(url=news_api_url, headers={'content-type': 'application/x-www-form-urlencoded'})
 			json_object = response.json()
 
 			articles = json_object['articles']
 
-			resp_obj = [] #final array
+			#final array to be returned
+			resp_obj = [] 
 			
 			# Append News API data
+			log_info("Appending News API data.", "NewsViewSet/list")
 			for article in articles:
 				json_article = {'headline': article['title'], 'link': article['url'], 'source': 'newsapi'}
 				resp_obj.append(json_article)
 
 
 			# Reddit
-			reddit_api_url = '{0}'.format(settings.REDDIT_API_URL)
+			# Chech if search param is provided
+			if query is not None and query != '':
+				reddit_api_url = '{0}?q={1}&restrict_sr=1'.format(settings.REDDIT_SEARCH_API_URL, query)
+			else:
+				reddit_api_url = '{0}'.format(settings.REDDIT_API_URL)
 			response = requests.get(url=reddit_api_url, headers={'content-type': 'application/x-www-form-urlencoded'})
 			json_object = response.json()
 			
@@ -46,6 +60,7 @@ class NewsViewSet(viewsets.GenericViewSet):
 
 			
 			# Append Reddit API data
+			log_info("Appending Reddit data.", "NewsViewSet/list")
 			for article in articles:
 				json_article = {'headline': article['data']['title'], 'link': article['data']['url'], 'source': 'reddit'}
 				resp_obj.append(json_article)
