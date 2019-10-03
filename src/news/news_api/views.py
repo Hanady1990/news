@@ -1,4 +1,4 @@
-from rest_framework import viewsets, exceptions
+from rest_framework import viewsets, exceptions, status
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -34,17 +34,21 @@ class NewsViewSet(viewsets.GenericViewSet):
 			news_api_url = '{0}?apiKey={1}&q={2}'.format(settings.NEWS_API_URL, settings.NEWS_API_KEY, query)
 			response = requests.get(url=news_api_url, headers={'content-type': 'application/x-www-form-urlencoded'})
 			json_object = response.json()
-
-			articles = json_object['articles']
-
 			#final array to be returned
 			resp_obj = [] 
-			
-			# Append News API data
-			log_info("Appending News API data.", "NewsViewSet/list")
-			for article in articles:
-				json_article = {'headline': article['title'], 'link': article['url'], 'source': 'newsapi'}
-				resp_obj.append(json_article)
+
+			# Check if response status is ok
+			if response.status_code == status.HTTP_200_OK:
+				articles = json_object['articles']
+
+				# Append News API data
+				log_info("Appending News API data.", "NewsViewSet/list")
+				for article in articles:
+					json_article = {'headline': article['title'], 'link': article['url'], 'source': 'newsapi'}
+					resp_obj.append(json_article)
+			else:
+				log_error("Error retreiving News API data. Message: {0}, error code: {1}".format(json_object['message'], json_object['code']), "NewsViewSet/list")
+				return Response(json_object['message'], status=response.status_code)
 
 
 			# Reddit
@@ -55,15 +59,19 @@ class NewsViewSet(viewsets.GenericViewSet):
 				reddit_api_url = '{0}'.format(settings.REDDIT_API_URL)
 			response = requests.get(url=reddit_api_url, headers={'content-type': 'application/x-www-form-urlencoded'})
 			json_object = response.json()
-			
-			articles = json_object['data']['children']
 
-			
-			# Append Reddit API data
-			log_info("Appending Reddit data.", "NewsViewSet/list")
-			for article in articles:
-				json_article = {'headline': article['data']['title'], 'link': article['data']['url'], 'source': 'reddit'}
-				resp_obj.append(json_article)
+			# Check if response status is ok
+			if response.status_code == status.HTTP_200_OK:
+				articles = json_object['data']['children']
+
+				# Append Reddit API data
+				log_info("Appending Reddit data.", "NewsViewSet/list")
+				for article in articles:
+					json_article = {'headline': article['data']['title'], 'link': article['data']['url'], 'source': 'reddit'}
+					resp_obj.append(json_article)
+			else:
+				log_error("Error retreiving Reddit data. Message: {0}, error code: {1}".format(json_object['message'], json_object['error']), "NewsViewSet/list")
+				return Response(json_object['message'], status=response.status_code)
 
 			return Response(resp_obj)
 
