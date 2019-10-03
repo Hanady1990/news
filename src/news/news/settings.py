@@ -101,6 +101,63 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Logging
+U_LOGFILE_SIZE = 50*1024*1024 # 50MB max size
+U_LOGFILE_COUNT = 5 # Max of 2 backup files
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    # format in which logs will be written
+    'formatters': {
+        'simple': {
+            'format': '[%(asctime)s] %(levelname)s %(message)s',
+        'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+        'verbose': {
+            'format': '[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s',
+        'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+    },
+    # handlers define the file to be written, which level to write in that file,
+    # which format to use and which filter applies to that logger
+    'handlers': {
+        'debug_logfile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'news_api/Logging/debug.log',
+            'maxBytes': U_LOGFILE_SIZE,
+            'backupCount': U_LOGFILE_COUNT
+        },
+        'info_logfile': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'news_api/Logging/info.log',
+            'maxBytes': U_LOGFILE_SIZE,
+            'backupCount': U_LOGFILE_COUNT,
+            'formatter': 'verbose'
+        },
+        'error_logfile': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'news_api/Logging/error.log',
+            'maxBytes': U_LOGFILE_SIZE,
+            'backupCount': U_LOGFILE_COUNT,
+            'formatter': 'verbose'
+        },
+    },
+    # here the handlers for the loggers and the level of each logger is defined
+    'loggers': {
+        'error_logger': {
+            'handlers': ['error_logfile'],
+            'level': 'ERROR'
+         },
+        'info_logger': {
+            'handlers': ['info_logfile'],
+            'level': 'INFO'
+        },
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -120,5 +177,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+NEWS_API_URL = 'https://newsapi.org/v2/everything'
+REDDIT_API_URL = 'https://www.reddit.com/r/news/.json'
 
 NEWS_API_KEY = '927089e2072c4710840ca6d3fa9b7e50'

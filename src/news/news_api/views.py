@@ -4,54 +4,67 @@ from rest_framework.response import Response
 
 from newsapi import NewsApiClient
 from collections import namedtuple
+from datetime import datetime, timedelta
 
 import json
 import requests
+import sys
 import praw
+import logging
 
 from news import settings
 
 
 class NewsViewSet(viewsets.GenericViewSet):
 
-	def list(self, request, pk=None):
+	def list(self, request):
 		try:
-			
 
-			# Initialize News API client
-			newsapi = NewsApiClient(api_key=settings.NEWS_API_KEY)
-
-			url = 'https://newsapi.org/v2/everything?q=bitcoin&from=2019-09-04&sortBy=publishedAt&apiKey=927089e2072c4710840ca6d3fa9b7e50'
-			response = requests.get(url=url, headers={'content-type': 'application/x-www-form-urlencoded'})
+			# News API
+			today = datetime.today().date()
+			news_api_url = '{0}?q=bitcoin&from={1}&sortBy=publishedAt&apiKey={2}'.format(settings.NEWS_API_URL, today, settings.NEWS_API_KEY)
+			response = requests.get(url=news_api_url, headers={'content-type': 'application/x-www-form-urlencoded'})
 			json_object = response.json()
 
 			articles = json_object['articles']
-			resp_obj = []
+
+			resp_obj = [] #final array
+			
+			# Append News API data
 			for article in articles:
-				json_article = {'headline': article['title'], 'link': article['url'], 'source': 'News API'}
+				json_article = {'headline': article['title'], 'link': article['url'], 'source': 'newsapi'}
 				resp_obj.append(json_article)
 
+
+			# Reddit
+			reddit_api_url = '{0}'.format(settings.REDDIT_API_URL)
+			response = requests.get(url=reddit_api_url, headers={'content-type': 'application/x-www-form-urlencoded'})
+			json_object = response.json()
+			
+			articles = json_object['data']['children']
+
+			
+			# Append Reddit API data
+			for article in articles:
+				json_article = {'headline': article['data']['title'], 'link': article['data']['url'], 'source': 'reddit'}
+				resp_obj.append(json_article)
+
+
+
 			return Response(resp_obj)
-			x = json.loads(data, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-			return Response(x.source.id)
 
-			
-			# /v2/sources
-			sources = newsapi.get_sources(category='general')
-			myList = sources['sources']
-			
-			# url = 'https://newsapi.org/v2/everything?q=bitcoin&from=2019-09-01&sortBy=publishedAt&apiKey=927089e2072c4710840ca6d3fa9b7e50'
-
-			# response = requests.get(url=url, headers={'content-type': 'application/x-www-form-urlencoded'})
-			# json_object = response.json()
-
-			# if json_object['status'] != 'ok':
-			# 	raise exceptions.NotFound('Status is not OK')
-
-			# return Response(json_object['articles'])
 
 		except Exception as ex:
-			template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-			message = template.format(type(ex).__name__, ex.args)
+			template = "An exception of type {0} occurred. Arguments:\n{1!r} ---  line {2}"
+			message = template.format(type(ex).__name__, ex.args, sys.exc_info()[-1].tb_lineno)
+			log_error(message, 'NewsViewSet/list')
 			raise exceptions.APIException(message)
+
+def log_error(message, endpoint):
+	error_logger = logging.getLogger('error_logger')
+	error_logger.error('{} in {} at: {}'.format(message, endpoint, str(datetime.now())))
+
+def log_info(message, endpoint):
+	info_logger = logging.getLogger('info_logger')
+	info_logger.info('{} in {} at: {}'.format(message, endpoint, str(datetime.now())))
 

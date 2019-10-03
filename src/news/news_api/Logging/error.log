@@ -1,0 +1,4 @@
+[2019-10-03 12:00:55] ERROR [error_logger.log_error:63] An exception of type KeyError occurred. Arguments:
+('data',) ---  line 44 in NewsViewSet/list at: 2019-10-03 12:00:55.019248
+[2019-10-03 12:03:17] ERROR [error_logger.log_error:120] An exception of type KeyError occurred. Arguments:
+('data',) ---  line 46 in NewsViewSet/list at: 2019-10-03 12:03:17.001018
