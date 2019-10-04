@@ -3,14 +3,12 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from newsapi import NewsApiClient
 from collections import namedtuple
 from datetime import datetime, timedelta
 
 import json
 import requests
 import sys
-import praw
 import logging
 
 from news import settings
