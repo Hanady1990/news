@@ -17,10 +17,10 @@ These instructions will get you a copy of the project up and running on your loc
 `source env/bin/activate`
 
 ### Install required packages
-`pip install -r /path/to/requirements.txt`
+`pip install -r /path/to/requirements.txt` or `pip3 install -r /path/to/requirements.txt`
 
 ### Navigate to the rest app
-`cd /src/news/`
+`cd src/news/`
 
 ### Run server
 `python manage.py runserver`
@@ -33,5 +33,5 @@ Open your browser or Postman, paste the following URL: `http://127.0.0.1:8000/ap
 
 # Running the tests
 ### Run the following command
-`Python manage.py test`
+`python manage.py test`
 
