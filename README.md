@@ -23,7 +23,7 @@ These instructions will get you a copy of the project up and running on your loc
 `cd src/news/`
 
 ### Run server
-`python manage.py runserver`
+`python manage.py runserver` or `python3 manage.py runserver`
 
 ### List aggregated news
 Open your browser or Postman, paste the following URL: `http://127.0.0.1:8000/api/news/`
@@ -33,5 +33,5 @@ Open your browser or Postman, paste the following URL: `http://127.0.0.1:8000/ap
 
 # Running the tests
 ### Run the following command
-`python manage.py test`
+`python manage.py test`or `python3 manage.py test`
 
